@@ -1,0 +1,18 @@
+#include "AnalyticTableaux.cpp"
+#include <iostream>
+
+using namespace std;
+
+char findOperator(string &expr){
+    if(expr[0] == '~'){
+        return '~';
+    }
+}  
+
+int main(){
+    string expr;
+    cin >> expr;
+    cout << expr << endl;
+    char operador = findOperator(expr);
+    cout << operador;
+}
