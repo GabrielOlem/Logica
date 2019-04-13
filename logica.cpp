@@ -183,5 +183,62 @@ int main(){
             cout << "Sim, e satisfativel" << endl;
         }
     }
+    else if(quest == 2){//Refutavel
+        Node tableua = Node(expr[0], 0);
+        vector<Node*> apNodes = tableua.getAppliableNodes();
+        vector<Node*> inNodes;
+        while(!tableua.isClosed() && !apNodes.empty()){
+            for(int i=0; i<apNodes.size(); i++){
+                inNodes = applyRule(apNodes[i]);
+                checkContradictions(inNodes);
+            }
+            apNodes = tableua.getAppliableNodes();
+        }
+        if(tableua.isClosed()){
+            cout << "Nao, nao e refutavel." << endl;
+        }
+        else{
+            cout << "Sim, e refutavel" << endl;
+        }
+    }
+    else if(quest == 3){//Insatisfativel
+        Node tableua = Node(expr[0], 1);
+        vector<Node*> apNodes = tableua.getAppliableNodes();
+        vector<Node*> inNodes;
+        while(!tableua.isClosed() && !apNodes.empty()){
+            for(int i=0; i<apNodes.size(); i++){
+                inNodes = applyRule(apNodes[i]);
+                checkContradictions(inNodes);
+            }
+            apNodes = tableua.getAppliableNodes();
+        }
+        if(tableua.isClosed()){
+            cout << "Sim, e insatisfativel." << endl;
+        }
+        else{
+            cout << "Nao, nao e insatisfativel" << endl;
+        }
+    }
+    else{//Consequencia Logica
+        Node tableua = Node(expr[0], 0);
+        for(int i=1; i<expr.size(); i++){
+            tableua.insertFront(expr[i], 1);
+        }
+        vector<Node*> apNodes = tableua.getAppliableNodes();
+        vector<Node*> inNodes;
+        while(!tableua.isClosed() && !apNodes.empty()){
+            for(int i=0; i<apNodes.size(); i++){
+                inNodes = applyRule(apNodes[i]);
+                checkContradictions(inNodes);
+            }
+            apNodes = tableua.getAppliableNodes();
+        }
+        if(tableua.isClosed()){
+            cout << "Sim, e conseguencia logica." << endl;
+        }
+        else{
+            cout << "Nao, nao e consequencia logica" << endl;
+        }
+    }
     return 0;
 }
