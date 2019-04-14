@@ -1,5 +1,6 @@
 #include "AnalyticTableaux.cpp"
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 char findOperator(string &expr, int *local){
@@ -44,6 +45,13 @@ string negado(string &expr){
     }
     return a;
 }
+void checkContradictions(vector<Node*> insertedNodes){
+    for(int i=0; i<insertedNodes.size(); i++){
+        if(insertedNodes[i]->checkContradiction()){
+            insertedNodes[i]->markContradiction();
+        }
+    }
+}
 vector<Node*> applyRule(Node* node){
     vector<Node*> bla;
     int index;
@@ -57,14 +65,17 @@ vector<Node*> applyRule(Node* node){
         string Q = getRight(expr, index);
         if(operador == 'v' && node->getTruthValue() == 0){
             bla = node->insertFront(P, 0);
+            checkContradictions(bla);
             bla = node->insertFront(Q, 0);
         }
         else if(operador == '>' && node->getTruthValue() == 0){
             bla = node->insertFront(P, 1);
+            checkContradictions(bla);
             bla = node->insertFront(Q, 0);
         }
         else if(operador == '&' && node->getTruthValue() == 1){
             bla = node->insertFront(P, 1);
+            checkContradictions(bla);
             bla = node->insertFront(Q, 1);
         }
         else if(operador == 'v' && node->getTruthValue() == 1){
@@ -79,21 +90,16 @@ vector<Node*> applyRule(Node* node){
     }
     else{
         string atom;
-        atom += expr[2];
+        atom = expr[2];
         bla = node->insertFront(atom, !node->getTruthValue());
     }
     node->markApplied();
     return bla;
 }
-void checkContradictions(vector<Node*> insertedNodes){
-    for(int i=0; i<insertedNodes.size(); i++){
-        if(insertedNodes[i]->checkContradiction()){
-            insertedNodes[i]->markContradiction();
-        }
-    }
-}
+
 int getQuestion(string &linha, vector<string> &expr){
     string expr1, pergunta;
+    int comecou = 0;
     for(int i=0; i<linha.size(); i++){
         if(linha[i + 1] != 'e'){
             expr1 += linha[i];
@@ -103,8 +109,14 @@ int getQuestion(string &linha, vector<string> &expr){
         }
     }
     expr.push_back(expr1);
+    if(linha[linha.size() - 15] == 'i'){
+        return 3;
+    }
     for(int i=linha.size() - 15;i<linha.size(); i++){
-        if(linha[i] != ' ' && linha[i] != ')'){
+        if(linha[i] == 'e'){
+            comecou = 1;
+        }
+        if(linha[i] != ' ' && comecou){
             pergunta += linha[i];
         }
     }
@@ -116,9 +128,6 @@ int getQuestion(string &linha, vector<string> &expr){
     }
     else if(pergunta == "erefutavel?"){
         return 2;
-    }
-    else if(pergunta == "insatisfativel?"){
-        return 3;
     }
     else{
         int comecou = 0;
@@ -143,101 +152,111 @@ int getQuestion(string &linha, vector<string> &expr){
     }
 }
 int main(){
+    ifstream fioa("Entrada.in");
+    ofstream saida("Saida.out");
     string linha;
-    getline(cin, linha);
-    vector<string> expr;
-    int quest = getQuestion(linha, expr);
-    if(quest == 0){//Tautologia
-        Node tableua = Node(expr[0], 0);
-        vector<Node*> apNodes = tableua.getAppliableNodes();
-        vector<Node*> inNodes;
-        while(!tableua.isClosed() && !apNodes.empty()){
-            for(int i=0; i<apNodes.size(); i++){
-                inNodes = applyRule(apNodes[i]);
-                checkContradictions(inNodes);
+    int n;
+    fioa >> n;
+    for(int i=0; i<=n; i++){
+        getline(fioa, linha);
+        if(i != 0){
+            saida << "Problema #" << i << endl;
+            vector<string> expr;
+            int quest = getQuestion(linha, expr);
+            if(quest == 0){//Tautologia
+                Node tableua = Node(expr[0], 0);
+                vector<Node*> apNodes = tableua.getAppliableNodes();
+                vector<Node*> inNodes;
+                while(!tableua.isClosed() && !apNodes.empty()){
+                    for(int i=0; i<apNodes.size(); i++){
+                        inNodes = applyRule(apNodes[i]);
+                        checkContradictions(inNodes);
+                    }
+                    apNodes = tableua.getAppliableNodes();
+                }
+                if(tableua.isClosed()){
+                    saida << "Sim, e tautologia." << endl;
+                }
+                else{
+                    saida << "Nao, nao e tautologia" << endl;
+                }
             }
-            apNodes = tableua.getAppliableNodes();
-        }
-        if(tableua.isClosed()){
-            cout << "Sim, e tautologia." << endl;
-        }
-        else{
-            cout << "Nao, nao e tautologia" << endl;
-        }
-    }
-    else if(quest == 1){//Satisfativel
-        Node tableua = Node(expr[0], 1);
-        vector<Node*> apNodes = tableua.getAppliableNodes();
-        vector<Node*> inNodes;
-        while(!tableua.isClosed() && !apNodes.empty()){
-            for(int i=0; i<apNodes.size(); i++){
-                inNodes = applyRule(apNodes[i]);
-                checkContradictions(inNodes);
+            else if(quest == 1){//Satisfativel
+                Node tableua = Node(expr[0], 1);
+                vector<Node*> apNodes = tableua.getAppliableNodes();
+                vector<Node*> inNodes;
+                while(!tableua.isClosed() && !apNodes.empty()){
+                    for(int i=0; i<apNodes.size(); i++){
+                        inNodes = applyRule(apNodes[i]);
+                        checkContradictions(inNodes);
+                    }
+                    apNodes = tableua.getAppliableNodes();
+                }
+                if(tableua.isClosed()){
+                    saida << "Nao, nao e satisfastivel." << endl;
+                }
+                else{
+                    saida << "Sim, e satisfativel" << endl;
+                }
             }
-            apNodes = tableua.getAppliableNodes();
-        }
-        if(tableua.isClosed()){
-            cout << "Nao, nao e satisfastivel." << endl;
-        }
-        else{
-            cout << "Sim, e satisfativel" << endl;
-        }
-    }
-    else if(quest == 2){//Refutavel
-        Node tableua = Node(expr[0], 0);
-        vector<Node*> apNodes = tableua.getAppliableNodes();
-        vector<Node*> inNodes;
-        while(!tableua.isClosed() && !apNodes.empty()){
-            for(int i=0; i<apNodes.size(); i++){
-                inNodes = applyRule(apNodes[i]);
-                checkContradictions(inNodes);
+            else if(quest == 2){//Refutavel
+                Node tableua = Node(expr[0], 0);
+                vector<Node*> apNodes = tableua.getAppliableNodes();
+                vector<Node*> inNodes;
+                while(!tableua.isClosed() && !apNodes.empty()){
+                    for(int i=0; i<apNodes.size(); i++){
+                        inNodes = applyRule(apNodes[i]);
+                        checkContradictions(inNodes);
+                    }
+                    apNodes = tableua.getAppliableNodes();
+                }
+                if(tableua.isClosed()){
+                    saida << "Nao, nao e refutavel." << endl;
+                }
+                else{
+                    saida << "Sim, e refutavel" << endl;
+                }
             }
-            apNodes = tableua.getAppliableNodes();
-        }
-        if(tableua.isClosed()){
-            cout << "Nao, nao e refutavel." << endl;
-        }
-        else{
-            cout << "Sim, e refutavel" << endl;
-        }
-    }
-    else if(quest == 3){//Insatisfativel
-        Node tableua = Node(expr[0], 1);
-        vector<Node*> apNodes = tableua.getAppliableNodes();
-        vector<Node*> inNodes;
-        while(!tableua.isClosed() && !apNodes.empty()){
-            for(int i=0; i<apNodes.size(); i++){
-                inNodes = applyRule(apNodes[i]);
-                checkContradictions(inNodes);
+            else if(quest == 3){//Insatisfativel
+                Node tableua = Node(expr[0], 1);
+                vector<Node*> apNodes = tableua.getAppliableNodes();
+                vector<Node*> inNodes;
+                while(!tableua.isClosed() && !apNodes.empty()){
+                    for(int i=0; i<apNodes.size(); i++){
+                        inNodes = applyRule(apNodes[i]);
+                        checkContradictions(inNodes);
+                    }
+                    apNodes = tableua.getAppliableNodes();
+                }
+                if(tableua.isClosed()){
+                    saida << "Sim, e insatisfativel." << endl;
+                }
+                else{
+                    saida << "Nao, nao e insatisfativel" << endl;
+                }
             }
-            apNodes = tableua.getAppliableNodes();
-        }
-        if(tableua.isClosed()){
-            cout << "Sim, e insatisfativel." << endl;
-        }
-        else{
-            cout << "Nao, nao e insatisfativel" << endl;
-        }
-    }
-    else{//Consequencia Logica
-        Node tableua = Node(expr[0], 0);
-        for(int i=1; i<expr.size(); i++){
-            tableua.insertFront(expr[i], 1);
-        }
-        vector<Node*> apNodes = tableua.getAppliableNodes();
-        vector<Node*> inNodes;
-        while(!tableua.isClosed() && !apNodes.empty()){
-            for(int i=0; i<apNodes.size(); i++){
-                inNodes = applyRule(apNodes[i]);
-                checkContradictions(inNodes);
+            else{//Consequencia Logica
+                Node tableua = Node(expr[0], 0);
+                for(int i=1; i<expr.size(); i++){
+                    tableua.insertFront(expr[i], 1);
+                }
+                vector<Node*> apNodes = tableua.getAppliableNodes();
+                vector<Node*> inNodes;
+                while(!tableua.isClosed() && !apNodes.empty()){
+                    for(int i=0; i<apNodes.size(); i++){
+                        inNodes = applyRule(apNodes[i]);
+                        checkContradictions(inNodes);
+                    }
+                    apNodes = tableua.getAppliableNodes();
+                }
+                if(tableua.isClosed()){
+                    saida << "Sim, e conseguencia logica." << endl;
+                }
+                else{
+                    saida << "Nao, nao e consequencia logica" << endl;
+                }
             }
-            apNodes = tableua.getAppliableNodes();
-        }
-        if(tableua.isClosed()){
-            cout << "Sim, e conseguencia logica." << endl;
-        }
-        else{
-            cout << "Nao, nao e consequencia logica" << endl;
+            saida << endl;
         }
     }
     return 0;

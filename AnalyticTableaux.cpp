@@ -1,5 +1,4 @@
 #include "AnalyticTableaux.h"
-
 #include <iostream>
 
 /**
@@ -176,8 +175,9 @@ bool Node::checkContradiction()
 {
     for (Node *it = this->parent; it != nullptr; it = it->parent)
     {
-        if (it->expression == this->expression && it->truthValue == !this->truthValue)
+        if (it->expression == this->expression && it->truthValue == !this->truthValue){
             return true;
+        }
     }
     return false;
 }

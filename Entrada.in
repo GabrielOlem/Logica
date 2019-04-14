@@ -1,0 +1,6 @@
+5
+(A v (~A)) e tautologia?
+((P > Q) > (~R)) e refutavel?
+(B & (~B)) e satisfativel?
+((~A) > A) e insatisfativel?
+Q e consequencia logica de {((~Q) > (~P)), P}?
