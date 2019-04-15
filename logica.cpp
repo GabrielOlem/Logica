@@ -151,6 +151,25 @@ int getQuestion(string &linha, vector<string> &expr){
         return 4;
     }
 }
+bool isAlpha(string expr, int tv){
+    int numero;
+    char ope = findOperator(expr, &numero);
+    if((ope == '&' && tv == 0) || (ope == 'v' && tv == 1) || (ope == '>' && tv == 1)){
+        return false;
+    }
+    else{
+        return true;
+    }
+}
+Node* getAlpha(vector<Node*> apNodes, int indexorig){
+    for(int i=0; i<apNodes.size(); i++){
+        if(isAlpha(apNodes[i]->getExpression(), apNodes[i]->getTruthValue())){
+            return apNodes[i];
+        }
+        cout << apNodes[i]->getExpression() << endl;
+    }
+    return apNodes[indexorig];
+}
 int main(){
     ifstream fioa("Entrada.in");
     ofstream saida("Saida.out");
@@ -174,6 +193,7 @@ int main(){
                     }
                     apNodes = tableua.getAppliableNodes();
                 }
+                tableua.printTree();
                 if(tableua.isClosed()){
                     saida << "Sim, e tautologia." << endl;
                 }

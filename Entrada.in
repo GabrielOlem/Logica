@@ -1,5 +1,5 @@
 5
-(A v (~A)) e tautologia?
+((p v (q & r)) > ((p v q) & (p v r))) e tautologia?
 ((P > Q) > (~R)) e refutavel?
 (B & (~B)) e satisfativel?
 ((~A) > A) e insatisfativel?
