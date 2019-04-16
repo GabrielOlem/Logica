@@ -23,17 +23,10 @@ char findOperator(string &expr, int *local){
         }
     }
     return '-';
-}  
-string getLeft(string &expr, int index){
-    string q = "";
-    for(int i=1; i<index-1; i++){
-        q += expr[i];
-    }
-    return q;
 }
-string getRight(string &expr, int index){
+string get(string &expr, int esq, int dir){
     string q = "";
-    for(int i=index+2; i<expr.size() - 1; i++){
+    for(int i=esq; i<dir; i++){
         q += expr[i];
     }
     return q;
@@ -61,8 +54,8 @@ vector<Node*> applyRule(Node* node){
         bla = node->insertFront(negado(expr),!node->getTruthValue());
     }
     else if(operador != '-'){
-        string P = getLeft(expr, index);
-        string Q = getRight(expr, index);
+        string P = get(expr, 1, index - 1);
+        string Q = get(expr, index + 2, expr.size()-1);
         if(operador == 'v' && node->getTruthValue() == 0){
             bla = node->insertFront(P, 0);
             checkContradictions(bla);
@@ -166,7 +159,6 @@ Node* getAlpha(vector<Node*> apNodes, int indexorig){
         if(isAlpha(apNodes[i]->getExpression(), apNodes[i]->getTruthValue())){
             return apNodes[i];
         }
-        cout << apNodes[i]->getExpression() << endl;
     }
     return apNodes[indexorig];
 }
