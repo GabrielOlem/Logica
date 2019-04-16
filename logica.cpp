@@ -188,10 +188,18 @@ int main(){
                 vector<Node*> inNodes;
                 while(!tableua.isClosed() && !apNodes.empty()){
                     for(int i=0; i<apNodes.size(); i++){
-                        inNodes = applyRule(apNodes[i]);
-                        checkContradictions(inNodes);
+                        if(isAlpha(apNodes[i]->getExpression(), apNodes[i]->getTruthValue())){
+                            inNodes = applyRule(apNodes[i]);
+                            checkContradictions(inNodes);
+                        }
+                        else{
+                            inNodes = applyRule(getAlpha(apNodes, i));
+                            checkContradictions(inNodes);
+                            
+                        }
+                        apNodes = tableua.getAppliableNodes();
                     }
-                    apNodes = tableua.getAppliableNodes();
+                    
                 }
                 tableua.printTree();
                 if(tableua.isClosed()){
@@ -207,11 +215,19 @@ int main(){
                 vector<Node*> inNodes;
                 while(!tableua.isClosed() && !apNodes.empty()){
                     for(int i=0; i<apNodes.size(); i++){
-                        inNodes = applyRule(apNodes[i]);
-                        checkContradictions(inNodes);
+                        if(isAlpha(apNodes[i]->getExpression(), apNodes[i]->getTruthValue())){
+                            inNodes = applyRule(apNodes[i]);
+                            checkContradictions(inNodes);
+                        }
+                        else{
+                            inNodes = applyRule(getAlpha(apNodes, i));
+                            checkContradictions(inNodes);
+                            
+                        }
+                        apNodes = tableua.getAppliableNodes();
                     }
-                    apNodes = tableua.getAppliableNodes();
                 }
+                tableua.printTree();
                 if(tableua.isClosed()){
                     saida << "Nao, nao e satisfastivel." << endl;
                 }
@@ -225,11 +241,19 @@ int main(){
                 vector<Node*> inNodes;
                 while(!tableua.isClosed() && !apNodes.empty()){
                     for(int i=0; i<apNodes.size(); i++){
-                        inNodes = applyRule(apNodes[i]);
-                        checkContradictions(inNodes);
+                        if(isAlpha(apNodes[i]->getExpression(), apNodes[i]->getTruthValue())){
+                            inNodes = applyRule(apNodes[i]);
+                            checkContradictions(inNodes);
+                        }
+                        else{
+                            inNodes = applyRule(getAlpha(apNodes, i));
+                            checkContradictions(inNodes);
+                            
+                        }
+                        apNodes = tableua.getAppliableNodes();
                     }
-                    apNodes = tableua.getAppliableNodes();
                 }
+                tableua.printTree();
                 if(tableua.isClosed()){
                     saida << "Nao, nao e refutavel." << endl;
                 }
@@ -243,11 +267,19 @@ int main(){
                 vector<Node*> inNodes;
                 while(!tableua.isClosed() && !apNodes.empty()){
                     for(int i=0; i<apNodes.size(); i++){
-                        inNodes = applyRule(apNodes[i]);
-                        checkContradictions(inNodes);
+                        if(isAlpha(apNodes[i]->getExpression(), apNodes[i]->getTruthValue())){
+                            inNodes = applyRule(apNodes[i]);
+                            checkContradictions(inNodes);
+                        }
+                        else{
+                            inNodes = applyRule(getAlpha(apNodes, i));
+                            checkContradictions(inNodes);
+                            
+                        }
+                        apNodes = tableua.getAppliableNodes();
                     }
-                    apNodes = tableua.getAppliableNodes();
                 }
+                tableua.printTree();
                 if(tableua.isClosed()){
                     saida << "Sim, e insatisfativel." << endl;
                 }
@@ -264,11 +296,19 @@ int main(){
                 vector<Node*> inNodes;
                 while(!tableua.isClosed() && !apNodes.empty()){
                     for(int i=0; i<apNodes.size(); i++){
-                        inNodes = applyRule(apNodes[i]);
-                        checkContradictions(inNodes);
+                        if(isAlpha(apNodes[i]->getExpression(), apNodes[i]->getTruthValue())){
+                            inNodes = applyRule(apNodes[i]);
+                            checkContradictions(inNodes);
+                        }
+                        else{
+                            inNodes = applyRule(getAlpha(apNodes, i));
+                            checkContradictions(inNodes);
+                            
+                        }
+                        apNodes = tableua.getAppliableNodes();
                     }
-                    apNodes = tableua.getAppliableNodes();
                 }
+                tableua.printTree();
                 if(tableua.isClosed()){
                     saida << "Sim, e conseguencia logica." << endl;
                 }
