@@ -185,9 +185,7 @@ int main(){
                             checkContradictions(inNodes);
                         }
                         else{
-                            cout << "Foi isso " << apNodes[i]->getExpression();
                             inNodes = applyRule(getAlpha(apNodes, i));
-                            cout << " chegou isso " << getAlpha(apNodes, i)->getExpression() << endl;
                             checkContradictions(inNodes);
                             
                         }
