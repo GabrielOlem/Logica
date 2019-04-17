@@ -4,7 +4,7 @@
 
 using namespace std;
 char findOperator(string &expr, int *local){
-    if(expr[0] == '~'){
+    if(expr[1] == '~'){
         return '~';
     }
     int pe = 0, pd = 0;
@@ -32,11 +32,11 @@ string get(string &expr, int esq, int dir){
     return q;
 }
 string negado(string &expr){
-    string a = "";
-    for(int i=1; i<expr.size() - 1; i++){
-        a += expr[i];
+    string q = "";
+    for(int i=2; i<expr.size() - 1; i++){
+        q += expr[i];
     }
-    return a;
+    return q;
 }
 void checkContradictions(vector<Node*> insertedNodes){
     for(int i=0; i<insertedNodes.size(); i++){
@@ -80,11 +80,6 @@ vector<Node*> applyRule(Node* node){
         else if(operador == '&' && node->getTruthValue() == 0){
             bla = node->insertSides(P, 0, Q, 0);
         }
-    }
-    else{
-        string atom;
-        atom = expr[2];
-        bla = node->insertFront(atom, !node->getTruthValue());
     }
     node->markApplied();
     return bla;

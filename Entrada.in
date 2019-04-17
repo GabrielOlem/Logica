@@ -1,6 +1,6 @@
 5
-((P v (Q & R)) > ((P v Q) & (P v R))) e tautologia?
-(((x & y) v (x & (~y))) v (((~x) & y) v ((~x) & (~y)))) e tautologia?
-(B & (~B)) e satisfativel?
+(~((~X) & Y)) e tautologia?
+((~X) & Y) e consequencia logica de {(X > Y), ((~Y) & (X v Z)), (~Z)}?
+((((X > Y) & ((~Y) & (X v Z))) & (~Z)) & (~((~X) & Y))) e satisfativel?
 ((~A) > A) e insatisfativel?
 Q e consequencia logica de {((~Q) > (~P)), P}?
