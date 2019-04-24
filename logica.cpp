@@ -100,7 +100,7 @@ int getQuestion(string &linha, vector<string> &expr){
     if(linha[linha.size() - 15] == 'i'){
         return 3;
     }
-    for(int i=linha.size() - 15;i<linha.size(); i++){
+    for(int i=0;i<linha.size(); i++){
         if(linha[i] == 'e'){
             comecou = 1;
         }
@@ -188,12 +188,11 @@ int main(){
                     }
                     
                 }
-                tableua.printTree();
                 if(tableua.isClosed()){
                     saida << "Sim, e tautologia." << endl;
                 }
                 else{
-                    saida << "Nao, nao e tautologia" << endl;
+                    saida << "Nao, nao e tautologia." << endl;
                 }
             }
             else if(quest == 1){//Satisfativel
@@ -214,12 +213,11 @@ int main(){
                         apNodes = tableua.getAppliableNodes();
                     }
                 }
-                tableua.printTree();
                 if(tableua.isClosed()){
-                    saida << "Nao, nao e satisfastivel." << endl;
+                    saida << "Nao, nao e satisfativel." << endl;
                 }
                 else{
-                    saida << "Sim, e satisfativel" << endl;
+                    saida << "Sim, e satisfativel." << endl;
                 }
             }
             else if(quest == 2){//Refutavel
@@ -240,12 +238,11 @@ int main(){
                         apNodes = tableua.getAppliableNodes();
                     }
                 }
-                tableua.printTree();
                 if(tableua.isClosed()){
                     saida << "Nao, nao e refutavel." << endl;
                 }
                 else{
-                    saida << "Sim, e refutavel" << endl;
+                    saida << "Sim, e refutavel." << endl;
                 }
             }
             else if(quest == 3){//Insatisfativel
@@ -266,41 +263,47 @@ int main(){
                         apNodes = tableua.getAppliableNodes();
                     }
                 }
-                tableua.printTree();
                 if(tableua.isClosed()){
                     saida << "Sim, e insatisfativel." << endl;
                 }
                 else{
-                    saida << "Nao, nao e insatisfativel" << endl;
+                    saida << "Nao, nao e insatisfativel." << endl;
                 }
             }
             else{//Consequencia Logica
+                int hasEqual = 0;
                 Node tableua = Node(expr[0], 0);
                 for(int i=1; i<expr.size(); i++){
                     tableua.insertFront(expr[i], 1);
-                }
-                vector<Node*> apNodes = tableua.getAppliableNodes();
-                vector<Node*> inNodes;
-                while(!tableua.isClosed() && !apNodes.empty()){
-                    for(int i=0; i<apNodes.size(); i++){
-                        if(isAlpha(apNodes[i]->getExpression(), apNodes[i]->getTruthValue())){
-                            inNodes = applyRule(apNodes[i]);
-                            checkContradictions(inNodes);
-                        }
-                        else{
-                            inNodes = applyRule(getAlpha(apNodes, i));
-                            checkContradictions(inNodes);
-                            
-                        }
-                        apNodes = tableua.getAppliableNodes();
+                    if(expr[0] == expr[i]){
+                        hasEqual = 1;
                     }
                 }
-                tableua.printTree();
-                if(tableua.isClosed()){
-                    saida << "Sim, e conseguencia logica." << endl;
+                if(hasEqual == 1){
+                    saida << "Sim, e consequencia logica." << endl;
                 }
                 else{
-                    saida << "Nao, nao e consequencia logica" << endl;
+                    vector<Node*> apNodes = tableua.getAppliableNodes();
+                    vector<Node*> inNodes;
+                    while(!tableua.isClosed() && !apNodes.empty()){
+                        for(int i=0; i<apNodes.size(); i++){
+                            if(isAlpha(apNodes[i]->getExpression(), apNodes[i]->getTruthValue())){
+                                inNodes = applyRule(apNodes[i]);
+                                checkContradictions(inNodes);
+                            }
+                            else{
+                                inNodes = applyRule(getAlpha(apNodes, i));
+                                checkContradictions(inNodes);
+                            }
+                            apNodes = tableua.getAppliableNodes();
+                        }
+                    }
+                    if(tableua.isClosed()){
+                        saida << "Sim, e consequencia logica." << endl;
+                    }
+                    else{
+                        saida << "Nao, nao e consequencia logica." << endl;
+                    }
                 }
             }
             saida << endl;
